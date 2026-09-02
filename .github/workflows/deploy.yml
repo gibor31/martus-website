@@ -23,7 +23,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Extract website
-        run: mkdir site && unzip -q martus-site-static.zip -d site
+        run: |
+          python3 -c "from pathlib import Path; d=Path('martus-site-static.zip').read_bytes(); i=d.find(b'PK\\x03\\x04'); assert i >= 0; Path('clean.zip').write_bytes(d[i:])"
+          mkdir site
+          unzip -q clean.zip -d site
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
